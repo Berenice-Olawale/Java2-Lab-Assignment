@@ -1,0 +1,13 @@
+/* Extra styles on top of the Bootswatch "Flatly" theme */
+.hero {
+    background: linear-gradient(135deg, #18bc9c 0%, #2c3e50 100%);
+}
+.hero-kicker { letter-spacing: .12em; opacity: .85; }
+.hero-lead { max-width: 42rem; }
+
+.feature-card { transition: transform .15s ease, box-shadow .15s ease; }
+.feature-card:hover { transform: translateY(-4px); box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .15) !important; }
+.feature-icon { font-size: 2.2rem; line-height: 1; margin-bottom: .5rem; }
+
+.message-text { white-space: pre-line; }
+.scroll-box { max-height: 26rem; overflow-y: auto; }
