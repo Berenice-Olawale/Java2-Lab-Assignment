@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Messages')}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments :: navbar('messages')}"></nav>
+
+<main class="flex-grow-1 container py-4">
+    <h1 class="mb-1">Messages</h1>
+    <p class="text-muted">Messages sent through the Contact form, newest first.</p>
+
+    <div class="alert alert-info" th:if="${#lists.isEmpty(messages)}">There are no messages yet.</div>
+
+    <div class="card shadow-sm mb-3" th:each="m : ${messages}">
+        <div class="card-header d-flex flex-wrap justify-content-between gap-2">
+            <strong th:text="${m.subject}">Subject</strong>
+            <span class="text-muted small">Sent: <span th:text="${m.sentAtDisplay}">2026-01-01 12:00:00</span></span>
+        </div>
+        <div class="card-body">
+            <p class="card-text message-text" th:text="${m.message}">Message text</p>
+        </div>
+        <div class="card-footer small text-muted">
+            From <strong th:text="${m.name}">Name</strong> (<span th:text="${m.email}">mail</span>)
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

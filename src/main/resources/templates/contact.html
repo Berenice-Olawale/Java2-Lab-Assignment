@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Contact')}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments :: navbar('contact')}"></nav>
+
+<main class="flex-grow-1 container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <h1 class="mb-1">Contact</h1>
+            <p class="text-muted">Send a message to the site owner.</p>
+
+            <div class="alert alert-success" th:if="${success}">Thank you! Your message has been sent.</div>
+
+            <form th:action="@{/contact}" th:object="${contactForm}" method="post" novalidate>
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}"
+                               th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="email" class="form-label">E-mail</label>
+                        <input type="text" class="form-control" id="email" th:field="*{email}"
+                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    </div>
+                    <div class="col-12">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="subject" th:field="*{subject}"
+                               th:classappend="${#fields.hasErrors('subject')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></div>
+                    </div>
+                    <div class="col-12">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" rows="6" th:field="*{message}"
+                                  th:classappend="${#fields.hasErrors('message')} ? 'is-invalid'"></textarea>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-lg">Send message</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
