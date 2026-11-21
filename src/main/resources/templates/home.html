@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head('Mainpage')}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments :: navbar('home')}"></nav>
+
+<main class="flex-grow-1">
+
+    <div class="container pt-3">
+        <div class="alert alert-warning alert-dismissible fade show" th:if="${param.denied}" role="alert">
+            You do not have permission to open that page.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero text-white text-center">
+        <div class="container py-5">
+            <p class="text-uppercase fw-semibold hero-kicker mb-2">ReNew Ltd. &middot; refurbished notebooks</p>
+            <h1 class="display-4 fw-bold mb-3" th:text="${appName}">Java Seminar App</h1>
+            <p class="lead mx-auto hero-lead mb-4">
+                Quality refurbished notebooks at favourable prices. Browse our stock,
+                compare processors and operating systems, and get in touch &ndash; all in one place.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+                <a class="btn btn-light btn-lg" th:href="@{/database}">Browse notebooks</a>
+                <a class="btn btn-outline-light btn-lg" th:href="@{/contact}">Contact us</a>
+                <a class="btn btn-warning btn-lg" th:href="@{/register}" sec:authorize="isAnonymous()">Join now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature cards -->
+    <section class="container py-5">
+        <h2 class="text-center fw-bold mb-1">What you can do here</h2>
+        <p class="text-center text-muted mb-4">Everything is reachable from the menu on top.</p>
+        <div class="row g-4">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm feature-card">
+                    <div class="card-body">
+                        <div class="feature-icon">&#128451;</div>
+                        <h5 class="card-title">Browse our notebooks</h5>
+                        <p class="card-text">The whole stock with processor, operating system, price and pieces in stock &ndash; filter by manufacturer.</p>
+                        <a th:href="@{/database}" class="stretched-link">Open Database &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm feature-card">
+                    <div class="card-body">
+                        <div class="feature-icon">&#9993;</div>
+                        <h5 class="card-title">Send us a message</h5>
+                        <p class="card-text">A validated contact form. Your message is stored in the database.</p>
+                        <a th:href="@{/contact}" class="stretched-link">Open Contact &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm feature-card">
+                    <div class="card-body">
+                        <div class="feature-icon">&#128202;</div>
+                        <h5 class="card-title">See the charts</h5>
+                        <p class="card-text">Our stock visualised with charts.</p>
+                        <a th:href="@{/chart}" class="stretched-link">Open Chart &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm feature-card">
+                    <div class="card-body">
+                        <div class="feature-icon">&#128268;</div>
+                        <h5 class="card-title">Use the REST API</h5>
+                        <p class="card-text">The notebook data as JSON for other applications.</p>
+                        <a th:href="@{/rest}" class="stretched-link">Open REST &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm feature-card">
+                    <div class="card-body">
+                        <div class="feature-icon">&#128274;</div>
+                        <h5 class="card-title">Register and log in</h5>
+                        <p class="card-text">Registered visitors can read the messages sent to us.</p>
+                        <a th:href="@{/register}" class="stretched-link" sec:authorize="isAnonymous()">Create an account &rarr;</a>
+                        <a th:href="@{/messages}" class="stretched-link" sec:authorize="isAuthenticated()">Open Messages &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm feature-card">
+                    <div class="card-body">
+                        <div class="feature-icon">&#9881;</div>
+                        <h5 class="card-title">Manage the data</h5>
+                        <p class="card-text">Administrators can create, edit and delete notebook records (CRUD).</p>
+                        <span class="text-muted small">Admin only</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roles -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-4">Three kinds of users</h2>
+            <div class="row g-4 text-center">
+                <div class="col-12 col-md-4">
+                    <span class="badge bg-secondary mb-2">Visitor</span>
+                    <p class="mb-0">Mainpage, Database, Contact, Chart, REST, Login and Registration.</p>
+                </div>
+                <div class="col-12 col-md-4">
+                    <span class="badge bg-info mb-2">Registered visitor</span>
+                    <p class="mb-0">Everything a visitor can see, plus the <strong>Messages</strong> menu.</p>
+                </div>
+                <div class="col-12 col-md-4">
+                    <span class="badge bg-warning text-dark mb-2">Admin</span>
+                    <p class="mb-0">Messages plus the <strong>CRUD</strong> menu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
