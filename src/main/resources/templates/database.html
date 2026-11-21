@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Database')}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments :: navbar('database')}"></nav>
+
+<main class="flex-grow-1 container py-4">
+    <h1 class="mb-1">Database</h1>
+    <p class="text-muted">Data of the <code>notebook</code>, <code>processor</code> and <code>opsystem</code> tables, loaded with Spring Data repositories.</p>
+
+    <!-- Notebooks (joined with processor and operating system) -->
+    <h2 class="h4 mt-4">Notebooks <span class="badge bg-secondary" th:text="${#lists.size(notebooks)}">0</span></h2>
+
+    <form th:action="@{/database}" method="get" class="row g-2 align-items-end mb-3">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <label for="manufacturer" class="form-label mb-1">Manufacturer</label>
+            <select class="form-select" id="manufacturer" name="manufacturer">
+                <option value="">All manufacturers</option>
+                <option th:each="m : ${manufacturers}" th:value="${m}" th:text="${m}" th:selected="${m == selected}">HP</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a th:href="@{/database}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle table-sm">
+            <thead class="table-primary">
+            <tr>
+                <th>Manufacturer</th><th>Type</th><th>Display (&quot;)</th><th>Memory (MiB)</th><th>HDD (GB)</th>
+                <th>Video controller</th><th>Processor</th><th>Operating system</th><th class="text-end">Price</th><th class="text-end">In stock</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="n : ${notebooks}">
+                <td th:text="${n.manufacturer}">HP</td>
+                <td th:text="${n.type}">Type</td>
+                <td th:text="${n.display}">15.6</td>
+                <td th:text="${n.memory}">2048</td>
+                <td th:text="${n.harddisk}">250</td>
+                <td th:text="${n.videocontroller}">Video</td>
+                <td th:text="${n.processor != null} ? ${n.processor.manufacturer + ' ' + n.processor.type} : '-'">Intel Core</td>
+                <td th:text="${n.opsystem != null} ? ${n.opsystem.osname} : '-'">Linux</td>
+                <td class="text-end" th:text="${#numbers.formatInteger(n.price, 1, 'COMMA')}">100,000</td>
+                <td class="text-end">
+                    <span class="badge" th:classappend="${n.pieces > 0} ? 'bg-success' : 'bg-secondary'" th:text="${n.pieces}">3</span>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(notebooks)}"><td colspan="10" class="text-center text-muted">No notebooks found.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-12 col-lg-7">
+            <h2 class="h4">Processors <span class="badge bg-secondary" th:text="${#lists.size(processors)}">0</span></h2>
+            <div class="table-responsive scroll-box">
+                <table class="table table-striped table-hover table-sm">
+                    <thead class="table-primary"><tr><th>ID</th><th>Manufacturer</th><th>Type</th></tr></thead>
+                    <tbody>
+                    <tr th:each="p : ${processors}">
+                        <td th:text="${p.id}">1</td>
+                        <td th:text="${p.manufacturer}">AMD</td>
+                        <td th:text="${p.type}">Athlon</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-12 col-lg-5">
+            <h2 class="h4">Operating systems <span class="badge bg-secondary" th:text="${#lists.size(opsystems)}">0</span></h2>
+            <div class="table-responsive scroll-box">
+                <table class="table table-striped table-hover table-sm">
+                    <thead class="table-primary"><tr><th>ID</th><th>Name</th></tr></thead>
+                    <tbody>
+                    <tr th:each="o : ${opsystems}">
+                        <td th:text="${o.id}">1</td>
+                        <td th:text="${o.osname}">Linux</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
