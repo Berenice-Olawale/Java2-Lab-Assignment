@@ -1,0 +1,20 @@
+# Maven
+target/
+*.war
+*.jar
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local secrets - never commit passwords!
+application-local.properties
+*.env
