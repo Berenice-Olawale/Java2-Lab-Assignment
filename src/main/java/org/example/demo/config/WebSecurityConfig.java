@@ -1,20 +1,17 @@
+
 package org.example.demo.config;
 
 import org.example.demo.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-/**
- * Roles:
- *  - visitor            = not logged in
- *  - registered visitor = ROLE_USER  -> may see the Messages menu
- *  - admin              = ROLE_ADMIN -> may see the Messages and CRUD menus
- */
 @Configuration
 public class WebSecurityConfig {
 
@@ -31,43 +28,75 @@ public class WebSecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
+
         http
                 .authenticationProvider(authenticationProvider())
+
                 .authorizeHttpRequests(auth -> auth
-                        // menu items a not-logged-in visitor can open
-                        .requestMatchers("/", "/database", "/contact", "/chart", "/rest",
+                        // Public pages and resources
+                        .requestMatchers(
+                                "/", "/database", "/contact", "/chart", "/rest",
                                 "/register", "/login", "/error",
-                                "/css/**", "/js/**", "/images/**").permitAll()
-                        // Messages menu: registered visitor + admin
-                        .requestMatchers("/messages").hasAnyRole("USER", "ADMIN")
-                        // CRUD menu: admin only
-                        .requestMatchers("/crud", "/crud/**").hasRole("ADMIN")
-                        // TODO (teammate): add the rules of the RESTful API (e.g. /api/**) here
+                                "/css/**", "/js/**", "/images/**"
+                        ).permitAll()
+
+                        // Messages: registered users and admins
+                        .requestMatchers("/messages")
+                        .hasAnyRole("USER", "ADMIN")
+
+                        // CRUD: admins only
+                        .requestMatchers("/crud", "/crud/**")
+                        .hasRole("ADMIN")
+
+                        // REST API: GET requests are public
+                        .requestMatchers(HttpMethod.GET, "/api/**")
+                        .permitAll()
+
+                        // REST API: all other requests require admin
+                        .requestMatchers("/api/**")
+                        .hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
+
+                // Disable CSRF protection for REST API requests
+                .csrf(csrf ->
+                        csrf.ignoringRequestMatchers("/api/**")
+                )
+
+                // Browser login
                 .formLogin(form -> form
                         .loginPage("/login")
-                        // go back to the page the user wanted (e.g. /messages), otherwise to the Mainpage
                         .defaultSuccessUrl("/", false)
                         .permitAll()
                 )
+
+                // REST API authentication
+                .httpBasic(Customizer.withDefaults())
+
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
                         .permitAll()
                 )
+
                 .exceptionHandling(exception -> exception
-                        // logged in, but not allowed (e.g. a USER opens /crud) -> Mainpage with a warning.
-                        // getContextPath() keeps this working when deployed as neptun.war on Tomcat
-                        .accessDeniedHandler((request, response, accessDeniedException) ->
-                                response.sendRedirect(request.getContextPath() + "/?denied"))
+                        .accessDeniedHandler((request, response,
+                                              accessDeniedException) ->
+                                response.sendRedirect(
+                                        request.getContextPath() + "/?denied"
+                                )
+                        )
                 );
+
         return http.build();
     }
 }
