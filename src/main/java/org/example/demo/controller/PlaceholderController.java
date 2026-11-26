@@ -12,13 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PlaceholderController {
 
-    @GetMapping("/chart")
-    public String chart(Model model) {
-        model.addAttribute("pageTitle", "Chart");
-        model.addAttribute("active", "chart");
-        return "placeholder";
-    }
-
     @GetMapping("/rest")
     public String rest(Model model) {
         model.addAttribute("pageTitle", "REST");
