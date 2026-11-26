@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('CRUD')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments :: navbar('crud')}"></nav>
+
+<main class="flex-grow-1 container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">CRUD – Notebooks</h1>
+        <a th:href="@{/crud/new}" class="btn btn-success">+ New notebook</a>
+    </div>
+
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-sm align-middle">
+            <thead class="table-primary">
+            <tr>
+                <th>ID</th>
+                <th>Manufacturer</th>
+                <th>Type</th>
+                <th>Display</th>
+                <th>Memory</th>
+                <th>HDD</th>
+                <th>Processor</th>
+                <th>OS</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Pieces</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="n : ${notebooks}">
+                <td th:text="${n.id}">1</td>
+                <td th:text="${n.manufacturer}">HP</td>
+                <td th:text="${n.type}">Type</td>
+                <td th:text="${n.display}">15.6</td>
+                <td th:text="${n.memory}">2048</td>
+                <td th:text="${n.harddisk}">250</td>
+                <td th:text="${n.processor != null} ? ${n.processor.manufacturer + ' ' + n.processor.type} : '-'">CPU</td>
+                <td th:text="${n.opsystem != null} ? ${n.opsystem.osname} : '-'">OS</td>
+                <td class="text-end" th:text="${n.price}">100000</td>
+                <td class="text-end" th:text="${n.pieces}">3</td>
+
+                <td class="text-nowrap">
+                    <a th:href="@{/crud/edit/{id}(id=${n.id})}"
+                       class="btn btn-sm btn-outline-primary">Edit</a>
+
+                    <form th:action="@{/crud/delete/{id}(id=${n.id})}"
+                          method="post"
+                          class="d-inline"
+                          onsubmit="return confirm('Delete this notebook?');">
+
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

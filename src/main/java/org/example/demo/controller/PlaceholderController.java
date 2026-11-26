@@ -19,10 +19,4 @@ public class PlaceholderController {
         return "placeholder";
     }
 
-    @GetMapping("/crud")
-    public String crud(Model model) {
-        model.addAttribute("pageTitle", "CRUD");
-        model.addAttribute("active", "crud");
-        return "placeholder";
-    }
 }
